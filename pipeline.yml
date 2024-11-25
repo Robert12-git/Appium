@@ -19,11 +19,9 @@ steps:
     echo "Setting up environment"
     sudo apt-get install -y openjdk-11-jdk curl unzip lib32stdc++6 lib32z1
   displayName: 'Install Dependencies'
-  shell: bash
 
 - script: |
     echo "Running Tests"
     appium --log-level debug &
     npx mocha ./test/ui_tests.js
   displayName: 'Run UI Tests'
-  shell: bash
