@@ -10,11 +10,16 @@ variables:
   PATH: '$(ANDROID_HOME)/platform-tools:$(ANDROID_HOME)/tools:$(JAVA_HOME)/bin:$(PATH)'
 
 steps:
-# Step 1: Install dependencies
+- script: |
+    sudo apt-get update
+    sudo apt-get install -y tar
+  displayName: 'Install tar utility'
+
 - task: UseNode@1
   displayName: 'Install Node.js'
   inputs:
     version: '16.x'
+
 
 - script: |
     sudo apt-get update
