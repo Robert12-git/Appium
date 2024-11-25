@@ -2,11 +2,11 @@ trigger:
 - main
 
 pool:
-  vmImage: 'macOS-latest'
+  vmImage: 'ubuntu-latest'
 
 variables:
-  ANDROID_HOME: '/Users/runner/Library/Android/sdk'
-  JAVA_HOME: '/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home' # Adjust this based on the JDK version installed
+  ANDROID_HOME: '/usr/local/android-sdk'
+  JAVA_HOME: '/usr/lib/jvm/java-11-openjdk-amd64' # Update this based on your Linux distribution
   PATH: '$(ANDROID_HOME)/platform-tools:$(ANDROID_HOME)/tools:$(JAVA_HOME)/bin:$(PATH)'
 
 steps:
@@ -17,6 +17,8 @@ steps:
     version: '16.x'
 
 - script: |
+    sudo apt-get update
+    sudo apt-get install -y openjdk-11-jdk curl unzip lib32stdc++6 lib32z1
     npm install -g appium
     npm install -g appium-doctor
     appium-doctor --android
@@ -26,8 +28,8 @@ steps:
 - script: |
     echo "Installing Android SDK..."
     mkdir -p $(ANDROID_HOME)
-    curl -o sdk-tools.zip https://dl.google.com/android/repository/commandlinetools-mac-9477386_latest.zip
-    unzip -o sdk-tools.zip -d $(ANDROID_HOME)
+    curl -o sdk-tools-linux.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+    unzip -o sdk-tools-linux.zip -d $(ANDROID_HOME)
     yes | $(ANDROID_HOME)/cmdline-tools/bin/sdkmanager --licenses
     $(ANDROID_HOME)/cmdline-tools/bin/sdkmanager "platform-tools" "build-tools;33.0.2" "platforms;android-33"
   displayName: 'Set up Android SDK'
