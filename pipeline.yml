@@ -4,49 +4,27 @@ trigger:
 pool:
   name: Appium
 
-variables:
-  ANDROID_HOME: '/usr/local/android-sdk'
-  JAVA_HOME: '/usr/lib/jvm/java-11-openjdk-amd64' # Update this based on your Linux distribution
-  PATH: '$(ANDROID_HOME)/platform-tools:$(ANDROID_HOME)/tools:$(JAVA_HOME)/bin:$(PATH)'
-
 steps:
 - script: |
     sudo apt-get update
     sudo apt-get install -y tar
   displayName: 'Install tar utility'
+  shell: bash
 
 - task: UseNode@1
   displayName: 'Install Node.js'
   inputs:
     version: '16.x'
 
-
 - script: |
-    sudo apt-get update
+    echo "Setting up environment"
     sudo apt-get install -y openjdk-11-jdk curl unzip lib32stdc++6 lib32z1
-    npm install -g appium
-    npm install -g appium-doctor
-    appium-doctor --android
-  displayName: 'Install Appium and check dependencies'
+  displayName: 'Install Dependencies'
+  shell: bash
 
-# Step 2: Download Android SDK tools and set up environment
 - script: |
-    echo "Installing Android SDK..."
-    mkdir -p $(ANDROID_HOME)
-    curl -o sdk-tools-linux.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-    unzip -o sdk-tools-linux.zip -d $(ANDROID_HOME)
-    yes | $(ANDROID_HOME)/cmdline-tools/bin/sdkmanager --licenses
-    $(ANDROID_HOME)/cmdline-tools/bin/sdkmanager "platform-tools" "build-tools;33.0.2" "platforms;android-33"
-  displayName: 'Set up Android SDK'
-
-# Step 3: Install Appium dependencies
-- script: |
-    npm install appium-uiautomator2-driver
-  displayName: 'Install UIAutomator2 driver'
-
-# Step 4: Run tests
-- script: |
-    echo "Running UI tests..."
+    echo "Running Tests"
     appium --log-level debug &
-    npx mocha ./test/ui_tests.js # Replace with your test file
-  displayName: 'Run UI tests'
+    npx mocha ./test/ui_tests.js
+  displayName: 'Run UI Tests'
+  shell: bash
