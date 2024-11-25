@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: frizian1234-HP-Pavilion-Gaming-Laptop-15-ec1xxx
+  name: Appium
 
 variables:
   ANDROID_HOME: '/usr/local/android-sdk'
