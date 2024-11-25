@@ -1,0 +1,45 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'macOS-latest'
+
+variables:
+  ANDROID_HOME: '/Users/runner/Library/Android/sdk'
+  JAVA_HOME: '/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home' # Adjust this based on the JDK version installed
+  PATH: '$(ANDROID_HOME)/platform-tools:$(ANDROID_HOME)/tools:$(JAVA_HOME)/bin:$(PATH)'
+
+steps:
+# Step 1: Install dependencies
+- task: UseNode@1
+  displayName: 'Install Node.js'
+  inputs:
+    version: '16.x'
+
+- script: |
+    npm install -g appium
+    npm install -g appium-doctor
+    appium-doctor --android
+  displayName: 'Install Appium and check dependencies'
+
+# Step 2: Download Android SDK tools and set up environment
+- script: |
+    echo "Installing Android SDK..."
+    mkdir -p $(ANDROID_HOME)
+    curl -o sdk-tools.zip https://dl.google.com/android/repository/commandlinetools-mac-9477386_latest.zip
+    unzip -o sdk-tools.zip -d $(ANDROID_HOME)
+    yes | $(ANDROID_HOME)/cmdline-tools/bin/sdkmanager --licenses
+    $(ANDROID_HOME)/cmdline-tools/bin/sdkmanager "platform-tools" "build-tools;33.0.2" "platforms;android-33"
+  displayName: 'Set up Android SDK'
+
+# Step 3: Install Appium dependencies
+- script: |
+    npm install appium-uiautomator2-driver
+  displayName: 'Install UIAutomator2 driver'
+
+# Step 4: Run tests
+- script: |
+    echo "Running UI tests..."
+    appium --log-level debug &
+    npx mocha ./test/ui_tests.js # Replace with your test file
+  displayName: 'Run UI tests'
