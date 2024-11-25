@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: frizian1234-HP-Pavilion-Gaming-Laptop-15-ec1xxx
 
 variables:
   ANDROID_HOME: '/usr/local/android-sdk'
