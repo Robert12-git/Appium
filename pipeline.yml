@@ -9,7 +9,6 @@ steps:
     sudo apt-get update
     sudo apt-get install -y tar
   displayName: 'Install tar utility'
-  shell: bash
 
 - task: UseNode@1
   displayName: 'Install Node.js'
